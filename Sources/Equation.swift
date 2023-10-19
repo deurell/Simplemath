@@ -81,6 +81,16 @@ struct Equation {
       {
         return .doubleValue(res - op2)
       }
+      // Addition with one operand missing (Rational)
+      else if case .rationalValue(let op1)? = operand1,
+        case .rationalValue(let res)? = result
+      {
+        return .rationalValue(res.subtract(op1))
+      } else if case .rationalValue(let op2)? = operand2,
+        case .rationalValue(let res)? = result
+      {
+        return .rationalValue(res.subtract(op2))
+      }
 
     case .subtraction:
       // Double Subtraction
@@ -104,6 +114,16 @@ struct Equation {
         case .doubleValue(let res)? = result
       {
         return .doubleValue(res + op2)
+      }
+      // Subtraction with one operand missing (Rational)
+      else if case .rationalValue(let op1)? = operand1,
+        case .rationalValue(let res)? = result
+      {
+        return .rationalValue(op1.subtract(res))
+      } else if case .rationalValue(let op2)? = operand2,
+        case .rationalValue(let res)? = result
+      {
+        return .rationalValue(res.add(op2))
       }
 
     case .multiplication:
@@ -129,6 +149,18 @@ struct Equation {
       {
         return .doubleValue(res / op2)
       }
+      // Multiplication with one operand missing (Rational)
+      else if case .rationalValue(let op1)? = operand1,
+        case .rationalValue(let res)? = result
+      {
+        assert(res.numerator != 0, "Cannot divide by zero.")
+        return .rationalValue(res.divide(op1))
+      } else if case .rationalValue(let op2)? = operand2,
+        case .rationalValue(let res)? = result
+      {
+        assert(op2.numerator != 0, "Cannot divide by zero.")
+        return .rationalValue(res.divide(op2))
+      }
 
     case .division:
       // Double Division
@@ -153,8 +185,17 @@ struct Equation {
       {
         return .doubleValue(res * op2)
       }
+      // Division with one operand missing (Rational)
+      else if case .rationalValue(let op1)? = operand1,
+        case .rationalValue(let res)? = result
+      {
+        return .rationalValue(op1.divide(res))
+      } else if case .rationalValue(let op2)? = operand2,
+        case .rationalValue(let res)? = result
+      {
+        return .rationalValue(res.multiply(op2))
+      }
     }
     return nil
   }
-
 }

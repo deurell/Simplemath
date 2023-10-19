@@ -44,6 +44,20 @@ class EquationTests: XCTestCase {
     }
   }
 
+  func testSubtractionRationalOneOperand() {
+    let equation = Equation(
+      operation: .subtraction,
+      operand1: nil,
+      operand2: .rationalValue(Rational(2, 5)),
+      result: .rationalValue(Rational(2, 5)))
+    if case .rationalValue(let resultValue)? = equation.solve() {
+      XCTAssertEqual(resultValue.numerator, 4)
+      XCTAssertEqual(resultValue.denominator, 5)
+    } else {
+      XCTFail("Expected rational result")
+    }
+  }
+
   func testSubtractionRationalsNoResult() {
     let equation = Equation(
       operation: .subtraction,
@@ -99,6 +113,19 @@ class EquationTests: XCTestCase {
     }
   }
 
+  func testDivisionTwoDoubles() {
+    let equation = Equation(
+      operation: .division,
+      operand1: .doubleValue(6.0),
+      operand2: .doubleValue(2.0),
+      result: nil)
+    if case .doubleValue(let resultValue)? = equation.solve() {
+      XCTAssertEqual(resultValue, 3.0)
+    } else {
+      XCTFail("Expected double result")
+    }
+  }
+
   func testDivisionTwoRationals() {
     let equation = Equation(
       operation: .division,
@@ -113,5 +140,4 @@ class EquationTests: XCTestCase {
       XCTFail("Expected rational result")
     }
   }
-
 }
