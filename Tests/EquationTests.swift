@@ -4,7 +4,7 @@ import XCTest
 
 class EquationTests: XCTestCase {
 
-  func testAddition1() {
+  func testAdditionTwoDoubles() {
     let equation = Equation(
       operation: .addition,
       operand1: .doubleValue(3.0),
@@ -17,7 +17,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-  func testAddition2() {
+  func testAdditionTwoRationals() {
     let equation = Equation(
       operation: .addition,
       operand1: .rationalValue(Rational(5, 1)),
@@ -31,7 +31,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-  func testAddition3() {
+  func testAdditionDoublesOneOperand() {
     let equation = Equation(
       operation: .addition,
       operand1: .doubleValue(3.0),
@@ -44,7 +44,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-  func testSubtraction1() {
+  func testSubtractionRationalsNoResult() {
     let equation = Equation(
       operation: .subtraction,
       operand1: .rationalValue(Rational(10, 1)),
@@ -58,7 +58,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-  func testMultiplication1() {
+  func testMultiplicationTwoRationals() {
     let equation = Equation(
       operation: .multiplication,
       operand1: .rationalValue(Rational(6, 2)),
@@ -72,7 +72,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-  func testMultiplication2() {
+  func testMultiplicationTwoRationals2() {
     let equation = Equation(
       operation: .multiplication,
       operand1: .rationalValue(Rational(2, 3)),
@@ -86,7 +86,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-    func testMultiplication3() {
+  func testMultiplicationDoublesOneOperand() {
     let equation = Equation(
       operation: .multiplication,
       operand1: .doubleValue(2.0),
@@ -99,7 +99,7 @@ class EquationTests: XCTestCase {
     }
   }
 
-  func testDivisionSimple() {
+  func testDivisionTwoRationals() {
     let equation = Equation(
       operation: .division,
       operand1: .rationalValue(Rational(6, 1)),  // which is 6
