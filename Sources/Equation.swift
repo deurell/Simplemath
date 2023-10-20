@@ -67,7 +67,6 @@ struct Equation {
     case .division:
       return performDivision()
     }
-    return nil
   }
 
   private func performAddition() -> Operand? {
