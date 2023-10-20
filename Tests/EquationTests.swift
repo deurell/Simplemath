@@ -140,4 +140,44 @@ class EquationTests: XCTestCase {
       XCTFail("Expected rational result")
     }
   }
+
+  func testBuildingQuestionsWithDSL() {
+    let questions = Level {
+      MathQuestion("5 + x = 19", image: "image1.jpg") {
+        MathChoice("5", image: "choice1.jpg")
+        MathChoice("14", image: "choice2.jpg")
+        MathChoice("18", image: "choice3.jpg")
+      }
+      .withEquation(
+        MathEquation(
+          .addition,
+          operand1: .doubleValue(5),
+          operand2: nil,
+        result: .doubleValue(19)
+        )
+      )
+      
+      MathQuestion("1/2 + x = 3/4", image: "image2.jpg") {
+        MathChoice("5", image: "choice4.jpg")
+        MathChoice("14", image: "choice5.jpg")
+      }
+      .withEquation(
+        MathEquation(
+          .addition,
+          operand1: .rationalValue(Rational(1, 2)),
+          operand2: nil,
+        result: .rationalValue(Rational(3, 4))
+        )
+      )
+    }
+
+    XCTAssertEqual(questions.count, 2)
+    
+    XCTAssertEqual(questions[1].text, "1/2 + x = 3/4")
+    XCTAssertEqual(questions[1].choices.count, 2)
+    if let equation = questions[1].equation {
+      XCTAssertEqual(equation.operation, .addition)
+      XCTAssertEqual(equation.solve(), .rationalValue(Rational(1,4)))
+    }
+  }
 }

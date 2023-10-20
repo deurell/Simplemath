@@ -2,12 +2,12 @@ enum Operation {
   case addition, subtraction, multiplication, division
 }
 
-enum Operand {
+enum Operand: Equatable {
   case doubleValue(Double)
   case rationalValue(Rational)
 }
 
-struct Rational {
+struct Rational: Equatable {
   var numerator: Int
   var denominator: Int
 
