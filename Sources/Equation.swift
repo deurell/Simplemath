@@ -59,142 +59,97 @@ struct Equation {
   func solve() -> Operand? {
     switch operation {
     case .addition:
-      // Double Addition
-      if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let op2)? = operand2
-      {
-        return .doubleValue(op1 + op2)
-      }
-      // Rational Addition
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let op2)? = operand2
-      {
-        return .rationalValue(op1.add(op2))
-      }
-      // Addition with one operand missing (Double)
-      else if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let res)? = result
-      {
-        return .doubleValue(res - op1)
-      } else if case .doubleValue(let op2)? = operand2,
-        case .doubleValue(let res)? = result
-      {
-        return .doubleValue(res - op2)
-      }
-      // Addition with one operand missing (Rational)
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let res)? = result
-      {
-        return .rationalValue(res.subtract(op1))
-      } else if case .rationalValue(let op2)? = operand2,
-        case .rationalValue(let res)? = result
-      {
-        return .rationalValue(res.subtract(op2))
-      }
-
+      return performAddition()
     case .subtraction:
-      // Double Subtraction
-      if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let op2)? = operand2
-      {
-        return .doubleValue(op1 - op2)
-      }
-      // Rational Subtraction
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let op2)? = operand2
-      {
-        return .rationalValue(op1.subtract(op2))
-      }
-      // Subtraction with one operand missing (Double)
-      else if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let res)? = result
-      {
-        return .doubleValue(op1 - res)
-      } else if case .doubleValue(let op2)? = operand2,
-        case .doubleValue(let res)? = result
-      {
-        return .doubleValue(res + op2)
-      }
-      // Subtraction with one operand missing (Rational)
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let res)? = result
-      {
-        return .rationalValue(op1.subtract(res))
-      } else if case .rationalValue(let op2)? = operand2,
-        case .rationalValue(let res)? = result
-      {
-        return .rationalValue(res.add(op2))
-      }
-
+      return performSubtraction()
     case .multiplication:
-      // Double Multiplication
-      if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let op2)? = operand2
-      {
-        return .doubleValue(op1 * op2)
-      }
-      // Rational Multiplication
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let op2)? = operand2
-      {
-        return .rationalValue(op1.multiply(op2))
-      }
-      // Multiplication with one operand missing (Double)
-      else if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let res)? = result, op1 != 0
-      {
-        return .doubleValue(res / op1)
-      } else if case .doubleValue(let op2)? = operand2,
-        case .doubleValue(let res)? = result, op2 != 0
-      {
-        return .doubleValue(res / op2)
-      }
-      // Multiplication with one operand missing (Rational)
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let res)? = result
-      {
-        assert(res.numerator != 0, "Cannot divide by zero.")
-        return .rationalValue(res.divide(op1))
-      } else if case .rationalValue(let op2)? = operand2,
-        case .rationalValue(let res)? = result
-      {
-        assert(op2.numerator != 0, "Cannot divide by zero.")
-        return .rationalValue(res.divide(op2))
-      }
-
+      return performMultiplication()
     case .division:
-      // Double Division
-      if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let op2)? = operand2, op2 != 0
-      {
-        return .doubleValue(op1 / op2)
-      }
-      // Rational Division
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let op2)? = operand2
-      {
-        return .rationalValue(op1.divide(op2))
-      }
-      // Division with one operand missing (Double)
-      else if case .doubleValue(let op1)? = operand1,
-        case .doubleValue(let res)? = result, res != 0
-      {
-        return .doubleValue(op1 / res)
-      } else if case .doubleValue(let op2)? = operand2,
-        case .doubleValue(let res)? = result, op2 != 0
-      {
-        return .doubleValue(res * op2)
-      }
-      // Division with one operand missing (Rational)
-      else if case .rationalValue(let op1)? = operand1,
-        case .rationalValue(let res)? = result
-      {
-        return .rationalValue(op1.divide(res))
-      } else if case .rationalValue(let op2)? = operand2,
-        case .rationalValue(let res)? = result
-      {
-        return .rationalValue(res.multiply(op2))
-      }
+      return performDivision()
+    }
+    return nil
+  }
+
+  private func performAddition() -> Operand? {
+    if let op1 = extractDouble(operand1), let op2 = extractDouble(operand2) {
+      return .doubleValue(op1 + op2)
+    } else if let op1 = extractRational(operand1), let op2 = extractRational(operand2) {
+      return .rationalValue(op1.add(op2))
+    } else if let op1 = extractDouble(operand1), let res = extractDouble(result) {
+      return .doubleValue(res - op1)
+    } else if let op2 = extractDouble(operand2), let res = extractDouble(result) {
+      return .doubleValue(res - op2)
+    } else if let op1 = extractRational(operand1), let res = extractRational(result) {
+      return .rationalValue(res.subtract(op1))
+    } else if let op2 = extractRational(operand2), let res = extractRational(result) {
+      return .rationalValue(res.subtract(op2))
+    }
+    return nil
+  }
+
+  private func performSubtraction() -> Operand? {
+    if let op1 = extractDouble(operand1), let op2 = extractDouble(operand2) {
+      return .doubleValue(op1 - op2)
+    } else if let op1 = extractRational(operand1), let op2 = extractRational(operand2) {
+      return .rationalValue(op1.subtract(op2))
+    } else if let op1 = extractDouble(operand1), let res = extractDouble(result) {
+      return .doubleValue(op1 - res)
+    } else if let op2 = extractDouble(operand2), let res = extractDouble(result) {
+      return .doubleValue(res + op2)
+    } else if let op1 = extractRational(operand1), let res = extractRational(result) {
+      return .rationalValue(op1.subtract(res))
+    } else if let op2 = extractRational(operand2), let res = extractRational(result) {
+      return .rationalValue(res.add(op2))
+    }
+    return nil
+  }
+
+  private func performMultiplication() -> Operand? {
+    if let op1 = extractDouble(operand1), let op2 = extractDouble(operand2) {
+      return .doubleValue(op1 * op2)
+    } else if let op1 = extractRational(operand1), let op2 = extractRational(operand2) {
+      return .rationalValue(op1.multiply(op2))
+    } else if let op1 = extractDouble(operand1), let res = extractDouble(result), op1 != 0 {
+      return .doubleValue(res / op1)
+    } else if let op2 = extractDouble(operand2), let res = extractDouble(result), op2 != 0 {
+      return .doubleValue(res / op2)
+    } else if let op1 = extractRational(operand1), let res = extractRational(result) {
+      assert(res.numerator != 0, "Cannot divide by zero.")
+      return .rationalValue(res.divide(op1))
+    } else if let op2 = extractRational(operand2), let res = extractRational(result) {
+      assert(op2.numerator != 0, "Cannot divide by zero.")
+      return .rationalValue(res.divide(op2))
+    }
+    return nil
+  }
+
+  private func performDivision() -> Operand? {
+    if let op1 = extractDouble(operand1), let op2 = extractDouble(operand2), op2 != 0 {
+      return .doubleValue(op1 / op2)
+    } else if let op1 = extractRational(operand1), let op2 = extractRational(operand2) {
+      return .rationalValue(op1.divide(op2))
+    } else if let op1 = extractDouble(operand1), let res = extractDouble(result), res != 0 {
+      return .doubleValue(op1 / res)
+    } else if let op2 = extractDouble(operand2), let res = extractDouble(result), op2 != 0 {
+      return .doubleValue(res * op2)
+    } else if let op1 = extractRational(operand1), let res = extractRational(result) {
+      return .rationalValue(op1.divide(res))
+    } else if let op2 = extractRational(operand2), let res = extractRational(result) {
+      return .rationalValue(res.multiply(op2))
+    }
+    return nil
+  }
+
+  private func extractDouble(_ operand: Operand?) -> Double? {
+    if case .doubleValue(let value)? = operand {
+      return value
+    }
+    return nil
+  }
+
+  private func extractRational(_ operand: Operand?) -> Rational? {
+    if case .rationalValue(let value)? = operand {
+      return value
     }
     return nil
   }
