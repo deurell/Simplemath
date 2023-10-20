@@ -141,45 +141,48 @@ class EquationTests: XCTestCase {
   }
 
   func testBuildingQuestionsWithDSL() {
-    let questions = Level {
-      MathQuestion("x * 5 = 25", image: "image1.jpg") {
-        MathChoice("4", image: "choice1.jpg")
-        MathChoice("5", image: "choice2.jpg")
-        MathChoice("8", image: "choice3.jpg")
+    let level = Level {
+
+      Question("x * 5 = 25", image: "image1.jpg") {
+        Choice(text: "4", image: "choice1.jpg")
+        Choice(text: "5", image: "choice2.jpg")
+        Choice(text: "8", image: "choice3.jpg")
       }
       .withEquation(
-        MathEquation(
-          .multiplication,
+        Equation(
+          operation:
+            .multiplication,
           operand1: nil,
           operand2: .doubleValue(5),
-        result: .doubleValue(25)
+          result: .doubleValue(25)
         )
       )
-      
-      MathQuestion("1/2 + x = 3/4", image: "image2.jpg") {
-        MathChoice("1/2", image: "choice4.jpg")
-        MathChoice("3/4", image: "choice5.jpg")
+
+      Question("1/2 + x = 3/4", image: "image2.jpg") {
+        Choice(text: "1/2", image: "choice4.jpg")
+        Choice(text: "3/4", image: "choice5.jpg")
       }
       .withEquation(
-        MathEquation(
-          .addition,
+        Equation(
+          operation:
+            .addition,
           operand1: .rationalValue(Rational(1, 2)),
           operand2: nil,
-        result: .rationalValue(Rational(3, 4))
+          result: .rationalValue(Rational(3, 4))
         )
       )
     }
 
-    XCTAssertEqual(questions.count, 2)
-    XCTAssertEqual(questions[0].choices.count, 3)
-    if let equation = questions[0].equation {
+    XCTAssertEqual(level.questions.count, 2)
+    XCTAssertEqual(level.questions[0].choices.count, 3)
+    if let equation = level.questions[0].equation {
       XCTAssertEqual(equation.solve(), .doubleValue(5))
     }
-    XCTAssertEqual(questions[1].text, "1/2 + x = 3/4")
-    XCTAssertEqual(questions[1].choices.count, 2)
-    if let equation = questions[1].equation {
+    XCTAssertEqual(level.questions[1].text, "1/2 + x = 3/4")
+    XCTAssertEqual(level.questions[1].choices.count, 2)
+    if let equation = level.questions[1].equation {
       XCTAssertEqual(equation.operation, .addition)
-      XCTAssertEqual(equation.solve(), .rationalValue(Rational(1,4)))
+      XCTAssertEqual(equation.solve(), .rationalValue(Rational(1, 4)))
     }
   }
 }
