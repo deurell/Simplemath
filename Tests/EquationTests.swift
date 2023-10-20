@@ -129,13 +129,12 @@ class EquationTests: XCTestCase {
   func testDivisionTwoRationals() {
     let equation = Equation(
       operation: .division,
-      operand1: .rationalValue(Rational(6, 1)),  // which is 6
-      operand2: .rationalValue(Rational(2, 1)),  // which is 2
+      operand1: .rationalValue(Rational(6, 1)),
+      operand2: .rationalValue(Rational(2, 1)),
       result: nil)
     if case .rationalValue(let resultValue)? = equation.solve() {
-      print(resultValue.numerator, resultValue.denominator)  // should print 3 1
-      XCTAssertEqual(resultValue.numerator, 3)  // because 6 divided by 2 is 3
-      XCTAssertEqual(resultValue.denominator, 1)  // simplified denominator
+      XCTAssertEqual(resultValue.numerator, 3)
+      XCTAssertEqual(resultValue.denominator, 1)
     } else {
       XCTFail("Expected rational result")
     }
@@ -143,23 +142,23 @@ class EquationTests: XCTestCase {
 
   func testBuildingQuestionsWithDSL() {
     let questions = Level {
-      MathQuestion("5 + x = 19", image: "image1.jpg") {
-        MathChoice("5", image: "choice1.jpg")
-        MathChoice("14", image: "choice2.jpg")
-        MathChoice("18", image: "choice3.jpg")
+      MathQuestion("x * 5 = 25", image: "image1.jpg") {
+        MathChoice("4", image: "choice1.jpg")
+        MathChoice("5", image: "choice2.jpg")
+        MathChoice("8", image: "choice3.jpg")
       }
       .withEquation(
         MathEquation(
-          .addition,
-          operand1: .doubleValue(5),
-          operand2: nil,
-        result: .doubleValue(19)
+          .multiplication,
+          operand1: nil,
+          operand2: .doubleValue(5),
+        result: .doubleValue(25)
         )
       )
       
       MathQuestion("1/2 + x = 3/4", image: "image2.jpg") {
-        MathChoice("5", image: "choice4.jpg")
-        MathChoice("14", image: "choice5.jpg")
+        MathChoice("1/2", image: "choice4.jpg")
+        MathChoice("3/4", image: "choice5.jpg")
       }
       .withEquation(
         MathEquation(
@@ -172,7 +171,10 @@ class EquationTests: XCTestCase {
     }
 
     XCTAssertEqual(questions.count, 2)
-    
+    XCTAssertEqual(questions[0].choices.count, 3)
+    if let equation = questions[0].equation {
+      XCTAssertEqual(equation.solve(), .doubleValue(5))
+    }
     XCTAssertEqual(questions[1].text, "1/2 + x = 3/4")
     XCTAssertEqual(questions[1].choices.count, 2)
     if let equation = questions[1].equation {
