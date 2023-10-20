@@ -182,4 +182,27 @@ class EquationTests: XCTestCase {
       XCTAssertEqual(equation.solve(), .rationalValue(Rational(1, 4)))
     }
   }
+
+  func testDividingRationalsWithDSL() {
+    let level = Level {
+      Question("1/2 ÷ x = 1/3", image: "imageDivide.jpg") {
+        Choice(text: "3/2", image: "choiceDivide1.jpg")
+        Choice(text: "2/3", image: "choiceDivide2.jpg")
+      }
+      .withEquation(
+        Equation(
+          operation: .division,
+          operand1: .rationalValue(Rational(1, 2)),
+          operand2: nil,
+          result: .rationalValue(Rational(1, 3))
+        )
+      )
+    }
+    if let equation = level.questions.first?.equation {
+      XCTAssertEqual(equation.operation, .division)
+      XCTAssertEqual(equation.solve(), .rationalValue(Rational(3, 2)))
+    } else {
+      XCTFail("Equation is missing")
+    }
+  }
 }
