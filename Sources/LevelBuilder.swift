@@ -1,8 +1,18 @@
 import Foundation
 
-struct Choice {
-  let text: String
-  let image: String
+struct Level {
+  let questions: [Question]
+
+  init(@LevelBuilder builder: () -> [Question]) {
+    self.questions = builder()
+  }
+}
+
+@resultBuilder
+struct LevelBuilder {
+  static func buildBlock(_ components: Question...) -> [Question] {
+    return components
+  }
 }
 
 struct Question {
@@ -27,24 +37,14 @@ struct Question {
   }
 }
 
+struct Choice {
+  let text: String
+  let image: String
+}
+
 @resultBuilder
 struct ChoiceBuilder {
   static func buildBlock(_ components: Choice...) -> [Choice] {
-    return components
-  }
-}
-
-struct Level {
-  let questions: [Question]
-
-  init(@LevelBuilder builder: () -> [Question]) {
-    self.questions = builder()
-  }
-}
-
-@resultBuilder
-struct LevelBuilder {
-  static func buildBlock(_ components: Question...) -> [Question] {
     return components
   }
 }
