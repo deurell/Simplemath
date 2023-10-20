@@ -1,6 +1,6 @@
 import XCTest
 
-@testable import equations
+@testable import Simplemath
 
 class EquationTests: XCTestCase {
 
