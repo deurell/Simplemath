@@ -142,7 +142,6 @@ class EquationTests: XCTestCase {
 
   func testBuildingQuestionsWithDSL() {
     let level = Level {
-
       Question("x * 5 = 25", image: "image1.jpg") {
         Choice(text: "4", image: "choice1.jpg")
         Choice(text: "5", image: "choice2.jpg")
@@ -150,8 +149,7 @@ class EquationTests: XCTestCase {
       }
       .withEquation(
         Equation(
-          operation:
-            .multiplication,
+          operation: .multiplication,
           operand1: nil,
           operand2: .doubleValue(5),
           result: .doubleValue(25)
@@ -164,8 +162,7 @@ class EquationTests: XCTestCase {
       }
       .withEquation(
         Equation(
-          operation:
-            .addition,
+          operation: .addition,
           operand1: .rationalValue(Rational(1, 2)),
           operand2: nil,
           result: .rationalValue(Rational(3, 4))
